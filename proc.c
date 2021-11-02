@@ -532,3 +532,41 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+
+int 
+pssyscall()
+{
+
+  struct proc *pr;
+
+  sti();
+
+  acquire(&ptable.lock);
+  cprintf("name \t\t pid \t\t state \t\t\t parent \t\t sibling");
+  for(pr= ptable.proc ; pr < &ptable.proc[NPROC]; pr++)
+  {
+
+
+
+    if (pr->state == SLEEPING)
+    {
+      cprintf("%s \t\t %d \t\t (sleeping) \t\t %d \n", pr->name, pr->pid, pr->parent->pid);
+    }
+    else if (pr->state == RUNNING)
+    {
+      cprintf("%s \t\t %d \t\t (running) \t\t %d \n", pr->name, pr->pid, pr->parent->pid);
+
+    }
+    else if (pr->state == RUNNABLE)
+    {
+      cprintf("%s \t\t %d \t\t (runnable) \t\t %d \n", pr->name, pr->pid, pr->parent->pid);
+    }
+  }
+
+  release(&ptable.lock);
+
+
+  return 22;
+
+}
